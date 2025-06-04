@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+    <title>Personajes api</title>
+</head>
+<body>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        :root{
+            --primary-color: #000000;
+            --secondary-color: #d3540b;
+            --terceary-color: #251f1f;
+            --cuarto-color:#ffb703;
+            --quinto-color:#343a40;
+
+        }
+        body{
+            background-color: var(--primary-color);
+            font-family: 'segoe UI', Tahoma, Geneva, Verdana, san-serif;
+            margin: 0;
+        }
+        header{
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            background-color: var(--cuarto-color);
+        }
+        .search{
+            background-color: transparent;
+            border: 5px solid var(--terceary-color);
+            border-radius: 50px;
+            font-family: verdana, Geneva, Tahoma, sans-serif;
+            font-size: 15px;
+            padding: 8px 15px;
+            color: var(--primary-color);
+        }
+        
+        .search::placeholder{
+            color: var(--quinto-color);
+        }
+        .search:focus{
+            outline: none;
+            color: var(--cuarto-color);
+        }
+        main{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; 
+        }
+        .character{
+            width: 400px;
+            margin: 15px;
+            background-color: var(--cuarto-color);
+            box-shadow: 0 5px 5px var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .personaje img{
+            width: 80%;
+            height: 400%;
+            object-fit: contain;
+        }
+        .personaje-info{
+            color: var(--quinto-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 0.8px 15px 15px;
+            letter-spacing: 8px;
+        }
+        .personaje-info h3{
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        .personaje-info h1{
+            background-color: var(--primary-color);
+            padding:5px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .overview{
+            background-color: rgb(250, 250, 250);
+            padding: 32px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            max-height: 100%;
+            transform: translateY(101%);
+            overflow-y: auto;
+            transition: transform 0.3s ease-in;
+        }
+        .personaje:hover .overview{
+            transform: translateY(0);}
+    </style>
+
+    <header>
+        <img src="Dragon-Ball-Logo-1.png" alt="Dragon-Ball-Logo-1" style="width: 100px;">
+        <form id="form">
+        <input type="text" id="search" class="search" placeholder="Busca pelicula">
+    </header>
+    <main id="main"></main>
+    <script>
+        const API_URL ="https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=3fd2be6f0c70a2a598f084ddfb75487c&page=1";
+        const main = document.getElementById('main');
+        const form = document.getElementById('form');
+        const search = document.getElementById('search');
+
+        getCharacters(API_URL)
+        async function getPersonajes(url){
+            const res = await fetch(url);
+            const data = await res.json();
+            showCharacters(data.item || data);
+        }
+        function showPersonajes(character){
+            main.innerHTML = '';
+
+            characters.forEach((character) =>{
+                //esta linea va a poner todos los elementos al principio, para eso el forEach, es similar al "for", pero el for tiene su inicializacion, condicion y limitante
+                const {title, poster_path, vote_average, overview} = character;
+                //esta linea pone lo que nos va a interesar del API que vamos a obtener
+                const characterElements = document.createElement('div');
+                characterElements.classList.add('personaje');
+                characterElements.innerHTML =`
+                <img src = "${IMG_PATH + poster_path}" alt="${name}">
+                <div class="personaje-info">
+                    <h1>${id}</h1>
+                    <h3>${name}</h3>
+                    <br>
+                    ${race}
+                    </div>
+                    <div class = "overview">
+                    <h3>Overview</h3>
+                            ${description}
+                            </div>`
+                            main.appendChild(personajeElements);
+            })}
+           
+                form.addEventListener('submit', (e) =>{ 
+                    e.preventDefault()
+                    const searchTerm = search.value.toLowerCase();
+                    if(searchTerm && searchTerm !==''){
+                        getCharacters(API_URL + `?name searchTerm`)
+                        search.value='';
+                    }else{ window.location.reload();}
+                })
+    </script>
+</body>
+</html>
